@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+
+import { Suspense, useState, useEffect } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { FiEye, FiEyeOff, FiX } from 'react-icons/fi';
@@ -11,19 +12,8 @@ import Link from 'next/link';
 import { SigningFormData } from '@/lib/types';
 
 
-const LoginPage = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Partial<SigningFormData>>({});
-  const router = useRouter();
+const SearchParamsHandler = () => {
   const searchParams = useSearchParams();
-
-  const { register, handleSubmit, watch, formState: { errors: formErrors } } = useForm<SigningFormData>({
-    mode: 'onChange'
-  });
-
-  const email = watch('email');
-  const password = watch('password');
 
   useEffect(() => {
     const errorParam = searchParams.get('error');
@@ -52,6 +42,22 @@ const LoginPage = () => {
       );
     }
   }, [searchParams]);
+
+  return null;
+};
+
+const LoginPageContent = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Partial<SigningFormData>>({});
+  const router = useRouter();
+
+  const { register, handleSubmit, watch, formState: { errors: formErrors } } = useForm<SigningFormData>({
+    mode: 'onChange'
+  });
+
+  const email = watch('email');
+  const password = watch('password');
 
   const validateForm = (data: SigningFormData) => {
     const newErrors: Partial<SigningFormData> = {};
@@ -151,19 +157,23 @@ const LoginPage = () => {
   };
 
   return (
-    <section className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
-      <div className='w-full max-w-md'>
-        <div className='bg-slate-800 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-slate-700'>
-         
-          <div className='mb-8 text-center'>
-            <h1 className='text-3xl font-bold bg-gradient-to-r from-pink-400 to-violet-400 bg-clip-text text-transparent mb-2'>
-              Welcome Back
-            </h1>
-            <p className='text-gray-400 text-sm'>Sign in to your Besh Recipes account</p>
-          </div>
+    <>
+      <Suspense fallback={null}>
+        <SearchParamsHandler />
+      </Suspense>
+      <section className='min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
+        <div className='w-full max-w-md'>
+          <div className='bg-slate-800 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-slate-700'>
+           
+            <div className='mb-8 text-center'>
+              <h1 className='text-3xl font-bold bg-gradient-to-r from-pink-400 to-violet-400 bg-clip-text text-transparent mb-2'>
+                Welcome Back
+              </h1>
+              <p className='text-gray-400 text-sm'>Sign in to your Besh Recipes account</p>
+            </div>
 
-          
-          <form onSubmit={handleSubmit(signInWithCredential)} className='space-y-5'>
+            
+            <form onSubmit={handleSubmit(signInWithCredential)} className='space-y-5'>
             
             <div>
               <label htmlFor='email' className='block text-sm font-semibold text-gray-300 mb-2'>
@@ -314,7 +324,8 @@ const LoginPage = () => {
         </p>
       </div>
     </section>
+    </>
   );
 };
 
-export default LoginPage;
+export default LoginPageContent;
