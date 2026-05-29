@@ -10,7 +10,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   engine: "classic",
-  binaryTargets: ["native", "rhel-openssl-3.0.x"],
   datasource: {
     url: env("DATABASE_URL"),
   },
