@@ -11,7 +11,6 @@ interface NutritionData {
 
 export const GET = async (req: Request) => {
     try {
-        await ConnectToDB();
         const { searchParams } = new URL(req.url);
         const recipeTitle = searchParams.get("recipe");
         const servings = searchParams.get("servings") || "4";

@@ -19,7 +19,6 @@ async function uploadImage(file: Blob): Promise<UploadApiResponse> {
 
 export const GET = async (req: Request) => {
     try {
-        await ConnectToDB();
         const { searchParams } = new URL(req.url);
 
         const userIdParam = searchParams.get("userId");
@@ -96,7 +95,6 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
     try {
-        await ConnectToDB();
         const contentType = req.headers.get("content-type") || "";
         let userId: number | undefined;
         let categoryId: number | null | undefined;

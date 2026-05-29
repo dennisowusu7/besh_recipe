@@ -50,7 +50,6 @@ export const verifyUserDetails = async (user: Partial<DefaultUser>) => {
 
 export const getAllRecipes = async (count?: number) => {
     try {
-        await ConnectToDB();
         const recipes = await prisma.recipe.findMany({
             select: {
                 id: true,
@@ -93,7 +92,6 @@ export const getAllRecipes = async (count?: number) => {
 
 export const getRecipeById = async (id: string) => {
     try {
-        await ConnectToDB();
         const recipe = await prisma.recipe.findUnique({
             where: { id: Number(id) },
             select: {

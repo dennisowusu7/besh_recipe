@@ -178,8 +178,6 @@ export const authOptions: AuthOptions = {
                     return "/login?error=OAuthEmailMissing";
                 }
 
-                await ConnectToDB();
-
                 const existingUser = await prisma.user.findUnique({
                     where: { email: user.email },
                     include: { accounts: true },

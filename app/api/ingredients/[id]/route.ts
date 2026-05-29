@@ -7,7 +7,6 @@ type Params = {
 
 export const GET = async (_req: Request, { params }: Params) => {
     try {
-        await ConnectToDB();
         const { id } = await params;
         const ingredientId = Number(id);
 

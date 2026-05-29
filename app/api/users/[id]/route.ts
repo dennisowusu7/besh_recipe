@@ -8,7 +8,6 @@ type Params = {
 
 export const GET = async (_req: Request, { params }: Params) => {
     try {
-        await ConnectToDB();
         const { id } = await params;
         const userId = Number(id);
 
@@ -41,7 +40,6 @@ export const GET = async (_req: Request, { params }: Params) => {
 
 export const PATCH = async (req: Request, { params }: Params) => {
     try {
-        await ConnectToDB();
         const { id } = await params;
         const userId = Number(id);
 
@@ -94,7 +92,6 @@ export const PATCH = async (req: Request, { params }: Params) => {
 
 export const DELETE = async (_req: Request, { params }: Params) => {
     try {
-        await ConnectToDB();
         const { id } = await params;
         const userId = Number(id);
 

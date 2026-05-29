@@ -3,7 +3,6 @@ import prisma from "@/prisma";
 
 export const GET = async (req: Request) => {
     try {
-        await ConnectToDB();
         const { searchParams } = new URL(req.url);
         const name = searchParams.get("name")?.trim();
 
@@ -30,7 +29,6 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
     try {
-        await ConnectToDB();
         const body = await req.json();
         const { name } = body as { name?: string };
         const normalizedName = name?.trim();

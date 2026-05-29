@@ -3,7 +3,6 @@ import prisma from "@/prisma";
 
 export const GET = async (req: Request) => {
     try {
-        await ConnectToDB();
         const { searchParams } = new URL(req.url);
         const userIdParam = searchParams.get("userId");
         const recipeIdParam = searchParams.get("recipeId");
@@ -49,7 +48,6 @@ export const GET = async (req: Request) => {
 
 export const POST = async (req: Request) => {
     try {
-        await ConnectToDB();
         const body = await req.json();
         const { userId, recipeId, comment } = body as {
             userId?: number;
