@@ -49,33 +49,86 @@ export const verifyUserDetails = async (user: Partial<DefaultUser>) => {
 };
 
 export const getAllRecipes = async (count?: number) => {
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/recipes`, {
-        next: { revalidate: 5 },
-    });
-    if (!res.ok) {
+    try {
+        await ConnectToDB();
+        const recipes = await prisma.recipe.findMany({
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                preparationSteps: true,
+                cookingTime: true,
+                difficulty: true,
+                cuisine: true,
+                imageUrl: true,
+                createdAt: true,
+                updatedAt: true,
+                user: { select: { id: true, name: true, profileImage: true } },
+                category: { select: { id: true, name: true } },
+                ingredients: {
+                    select: {
+                        id: true,
+                        quantity: true,
+                        ingredient: { select: { id: true, name: true } },
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                        ratings: true,
+                        savedRecipes: true,
+                    },
+                },
+            },
+            orderBy: { createdAt: "desc" },
+            take: typeof count === "number" && count > 0 ? count : undefined,
+        });
+
+        return recipes;
+    } catch (error) {
+        console.error("Error fetching recipes:", error);
         return [];
     }
-    const payload = await res.json();
-    const recipes = Array.isArray(payload?.data) ? payload.data : [];
-
-    if (typeof count === "number" && count > 0) {
-        return recipes.slice(0, count);
-    }
-
-    return recipes;
 };
 
 export const getRecipeById = async (id: string) => {
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/recipes/${id}`, {
-        next: { revalidate: 5 },
-    });
+    try {
+        await ConnectToDB();
+        const recipe = await prisma.recipe.findUnique({
+            where: { id: Number(id) },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                preparationSteps: true,
+                cookingTime: true,
+                difficulty: true,
+                cuisine: true,
+                imageUrl: true,
+                createdAt: true,
+                updatedAt: true,
+                user: { select: { id: true, name: true, profileImage: true } },
+                category: { select: { id: true, name: true } },
+                ingredients: {
+                    select: {
+                        id: true,
+                        quantity: true,
+                        ingredient: { select: { id: true, name: true } },
+                    },
+                },
+                _count: {
+                    select: {
+                        comments: true,
+                        ratings: true,
+                        savedRecipes: true,
+                    },
+                },
+            },
+        });
 
-    if (!res.ok) {
+        return recipe ?? null;
+    } catch (error) {
+        console.error("Error fetching recipe:", error);
         return null;
     }
-
-    const payload = await res.json();
-    return payload?.data ?? null;
 };
