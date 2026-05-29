@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id Int @id @default(autoincrement())
+  userId Int
+  type String
+  provider String
+  providerAccountId String
+  refresh_token String?
+  access_token String?
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String?
+  session_state String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id Int @id @default(autoincrement())
+  sessionToken String @unique
+  userId Int
+  expires DateTime
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id Int @id @default(autoincrement())
+  identifier String
+  token String @unique
+  expires DateTime
+  @@unique([identifier, token])
+}
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Difficulty {
+  Easy
+  Medium
+  Hard
+}
+
+model User {
+  id Int @id @default(autoincrement()) @map("_id")
+  name String
+  email String @unique
+  password String
+  role Role @default(USER)
+  isActive Boolean @default(true)
+  profileImage String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  recipes Recipe[]
+  savedRecipes SavedRecipe[]
+  comments Comment[]
+  ratings Rating[]
+  accounts Account[]
+  sessions Session[]
+  @@map("users")
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  description String?
+  createdAt DateTime @default(now())
+  recipes Recipe[]
+  @@map("categories")
+}
+
+model Recipe {
+  id Int @id @default(autoincrement())
+  userId Int
+  categoryId Int?
+  title String
+  description String?
+  preparationSteps String
+  cookingTime Int?
+  difficulty Difficulty @default(Easy)
+  cuisine String?
+  imageUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  ingredients RecipeIngredient[]
+  savedRecipes SavedRecipe[]
+  comments Comment[]
+  ratings Rating[]
+  @@index([title], name: "idx_recipe_title")
+  @@index([cuisine], name: "idx_cuisine")
+  @@map("recipes")
+}
+
+model Ingredient {
+  id Int @id @default(autoincrement())
+  name String @unique
+  createdAt DateTime @default(now())
+  recipes RecipeIngredient[]
+  @@index([name], name: "idx_ingredient_name")
+  @@map("ingredients")
+}
+
+model RecipeIngredient {
+  id Int @id @default(autoincrement())
+  recipeId Int
+  ingredientId Int
+  quantity String?
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  @@map("recipe_ingredients")
+}
+
+model SavedRecipe {
+  id Int @id @default(autoincrement())
+  userId Int
+  recipeId Int
+  savedAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  @@unique([userId, recipeId])
+  @@map("saved_recipes")
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  userId Int
+  recipeId Int
+  comment String
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  @@map("comments")
+}
+
+model Rating {
+  id Int @id @default(autoincrement())
+  userId Int
+  recipeId Int
+  rating Int
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  @@unique([userId, recipeId])
+  @@map("ratings")
+}
