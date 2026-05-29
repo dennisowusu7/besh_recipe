@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import AddRecipeButton from "./AddRecipeButton";
+import AddRecipeButton from "@/app/components/AddRecipeButton";
 import { FiSearch, FiX, FiFilter } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 
