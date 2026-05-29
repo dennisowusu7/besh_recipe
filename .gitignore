@@ -41,7 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # prisma generated client
-.prisma/
+/prisma/generated
 /app/generated/prisma
 
 .env.local
