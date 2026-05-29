@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf prisma/generated 2>/dev/null || true && prisma generate --schema ./prisma/schema.prisma && next build",
+    "build": "prisma generate --schema ./prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate --schema ./prisma/schema.prisma"
+    "postinstall": "rm -rf prisma/generated 2>/dev/null || true && prisma generate --schema ./prisma/schema.prisma"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
