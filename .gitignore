@@ -40,7 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma generated client - old location
+# prisma - commit generated files for Vercel deployment
+# /prisma/generated
 /app/generated/prisma
 
 .env.local
