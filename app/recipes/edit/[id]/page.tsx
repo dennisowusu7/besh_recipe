@@ -67,7 +67,8 @@ import {
 } from "react-icons/fi";
 
 import { Category, RecipeFormValues } from "@/lib/types";
-import IngredientSelector, { SelectedIngredient } from "@/app/components/IngredientSelector";
+import IngredientSelector from "@/app/components/IngredientSelector";
+import { SelectedIngredient } from "@/lib/interfaces";
 
 const INSERT_IMAGE_COMMAND: LexicalCommand<string> = createCommand("INSERT_IMAGE_COMMAND");
 type SerializedImageNode = SerializedLexicalNode & { src: string; type: "image"; version: 1 };
@@ -325,7 +326,7 @@ export default function EditRecipePage() {
                 
                 // Load ingredients
                 if (recipe?.ingredients && Array.isArray(recipe.ingredients)) {
-                    const loadedIngredients = recipe.ingredients.map((ing) => ({
+                    const loadedIngredients = recipe.ingredients.map((ing: { ingredient: { id: any; name: any; }; quantity: any; }) => ({
                         id: ing.ingredient?.id || null,
                         name: ing.ingredient?.name || "",
                         quantity: ing.quantity || "",
@@ -534,7 +535,6 @@ export default function EditRecipePage() {
                             <p className="text-sm font-semibold text-slate-300 mb-4">Image Preview</p>
                             <div className="overflow-hidden rounded-lg border border-slate-600/50 bg-slate-900/50">
                                 {previewImage ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img src={previewImage} alt="Recipe preview" className="h-48 w-full object-cover" />
                                 ) : (
                                     <div className="flex h-48 items-center justify-center text-sm text-slate-500">No image</div>
